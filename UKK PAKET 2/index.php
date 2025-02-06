@@ -18,24 +18,8 @@ if (isset($_POST['submit'])) {
 }
 
 
-
-// pagination limit based on window size
-echo "<script>
-        var limit = 10;
-        if (window.innerWidth >= 768 && window.innerWidth <= 1024) {
-            limit = 5;
-        }
-            
-        document.cookie = 'pagination_limit=' + limit;
-        if (!document.cookie.includes('pagination_limit')) {
-            location.reload();
-        }
-        </script>";
-
-
-// get pagination limit from cookie
-$limit = isset($_COOKIE['pagination_limit']) ? (int)$_COOKIE['pagination_limit'] : 10;
-
+// get pagination limit 
+$limit = 5;
 
 
 // pagination logic
@@ -190,11 +174,10 @@ $hasil = mysqli_query($konek, $kueri);
             </div>
             <nav class="mt-2">
                 <ul class="flex space-x-4">   
+                    <li class="block lg:hidden"><a href="javascript:void(0);" id="toggleLink" onclick="toggleInputSection()" class="hover:underline">Add Task</a>
+                    </li>    
                     <li><a href="#" class="hover:underline">Admin</a></li>    
                     <li><a href="#" class="hover:underline">Logout</a></li>
-                    <li class="block lg:hidden"><a href="javascript:void(0);" id="toggleLink" onclick="toggleInputSection()" class="hover:underline">Add Task</a>
-
-                    </li>    
                 </ul>
             </nav>
         </div>
