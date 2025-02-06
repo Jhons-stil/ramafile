@@ -19,8 +19,26 @@ if (isset($_POST['submit'])) {
 
 
 
+// pagination limit based on window size
+echo "<script>
+        var limit = 10;
+        if (window.innerWidth >= 768 && window.innerWidth <= 1024) {
+            limit = 5;
+        }
+            
+        document.cookie = 'pagination_limit=' + limit;
+        if (!document.cookie.includes('pagination_limit')) {
+            location.reload();
+        }
+        </script>";
+
+
+// get pagination limit from cookie
+$limit = isset($_COOKIE['pagination_limit']) ? (int)$_COOKIE['pagination_limit'] : 10;
+
+
+
 // pagination logic
-$limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -33,7 +51,7 @@ $total_pages = ceil($total_rows / $limit);
 
 
 // show data from database per page
-$kueri = "SELECT * FROM task ORDER BY STATUS ASC, PRIORITY DESC, DUE_DATE ASC LIMIT $offset, $limit";  
+$kueri = "SELECT * FROM task ORDER BY STATUS ASC, PRIORITY DESC, DUE_DATE ASC LIMIT $limit OFFSET $offset";  
 $hasil = mysqli_query($konek, $kueri);
 ?>
 
@@ -124,6 +142,30 @@ $hasil = mysqli_query($konek, $kueri);
         function closeModal() {
             document.getElementById('deleteModal').style.display = 'none';
         }
+
+        function toggleInputSection() {
+            var inputSection = document.getElementById('inputSection');
+            var tableSection = document.getElementById('tableSection');
+            var toggleLink = document.getElementById('toggleLink');
+            if (inputSection.classList.contains('hidden')) {
+                inputSection.classList.remove('hidden');
+                tableSection.classList.add('hidden');
+                toggleLink.textContent = 'Close';
+            } else {
+                inputSection.classList.add('hidden');
+                tableSection.classList.remove('hidden');
+                toggleLink.textContent = 'Add Task';
+            }
+        }
+        
+        function hideInputSection() {
+            var inputSection = document.getElementById('inputSection');
+            var tableSection = document.getElementById('tableSection');
+            var toggleLink = document.getElementById('toggleLink');
+            inputSection.classList.add('hidden');
+            tableSection.classList.remove('hidden');
+            toggleLink.textContent = 'Add Task';
+        }
     </script>
 </head>
 <body class="bg-slate-900">
@@ -149,7 +191,10 @@ $hasil = mysqli_query($konek, $kueri);
             <nav class="mt-2">
                 <ul class="flex space-x-4">   
                     <li><a href="#" class="hover:underline">Admin</a></li>    
-                    <li><a href="#" class="hover:underline">Logout</a></li>    
+                    <li><a href="#" class="hover:underline">Logout</a></li>
+                    <li class="block lg:hidden"><a href="javascript:void(0);" id="toggleLink" onclick="toggleInputSection()" class="hover:underline">Add Task</a>
+
+                    </li>    
                 </ul>
             </nav>
         </div>
@@ -158,8 +203,8 @@ $hasil = mysqli_query($konek, $kueri);
 
 
 <!-- body, place where show input sections -->
- <div class="container mx-auto mt-8 flex">
-    <div class="bg-white p-6 rounded-lg shadow-xl shadow-grey-500/50 border border-gray-300 w-1/3 mr-5">
+ <div class="container mx-auto mt-8 flex flex-col lg:flex-row">
+    <div id="inputSection" class="bg-white p-6 rounded-lg shadow-xl shadow-grey-500/50 border border-gray-300 lg:w-1/3 mr-5 lg:mb-0 lg:mr-5 hidden lg:block">
     <h2 class="text-3xl font-bold mb-5 text-center">TASK INPUT</h2>
     <br>
     <form action="" method="post">
@@ -198,7 +243,7 @@ $hasil = mysqli_query($konek, $kueri);
 
 <!-- table sections, show task table that already inputed -->
     
-        <div class="bg-white p-6 rounded-lg shadow-xl shadow-grey-500/50 border border-gray-300 w-2/3">
+        <div id="tableSection" class="bg-white p-6 rounded-lg shadow-xl shadow-grey-500/50 border border-gray-300 lg:w-2/3">
             <h2 class="text-3xl font-bold mb-5 text-center">TASKS LIST</h2>
             <table class="min-w-full bg-white table-zigzag">
                 <thead>
