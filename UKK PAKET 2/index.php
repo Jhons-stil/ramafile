@@ -246,9 +246,9 @@ $hasil = mysqli_query($konek, $kueri);
 
                         
                         <tr>
-                            <td class="text-left py-3 px-4"><?= $no++ ?></td>
+                            <td class="text-center py-3 px-4"><?= $no++ ?></td>
                             <td class="text-left py-3 px-4"><?= $data['TASK'] ?></td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4">
                                 <?php if ($data['PRIORITY'] == 1) { ?>
                                     <span class="priority-label inline-block px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full">LOW</span>
                                 <?php } elseif ($data['PRIORITY'] == 2) { ?>
@@ -257,20 +257,23 @@ $hasil = mysqli_query($konek, $kueri);
                                     <span class="priority-label inline-block px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded-full">HIGH</span>
                                 <?php } ?>
                             </td>
-                            <td class="text-left py-3 px-4"><?= $data['DUE_DATE'] ?></td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4"><?= $data['DUE_DATE'] ?></td>
+                            <td class="text-center py-3 px-4">
                                 <?php if ($data['STATUS'] == 1) { ?>
                                     <span class="done-label inline-block px-2 py-1 text-xs font-semibold text-white bg-emerald-500 rounded-md">DONE</span>
                                 <?php } else { ?>
                                     <span class="done-label inline-block px-2 py-1 text-xs font-semibold text-white bg-amber-400 rounded-md">UNDONE</span>
                                 <?php } ?>
                             </td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4">
+                                <?php if ($data['STATUS'] != 1) { ?>
+
+                                    <a href="done.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-green-500 rounded-md"><i class='bx bx-check'></i> Done</a>
                                 
-                                <a href="done.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-green-500 rounded-md"><i class='bx bx-check'></i> Done</a>
+                                    <a href="edit.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-md"><i class='bx bxs-cog'></i> Edit</a>   
                                 
-                                <a href="edit.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-md"><i class='bx bxs-cog'></i> Edit</a>   
-                                
+                                <?php } ?>
+
                                 <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $data['ID']?>)" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-red-700 rounded-md"><i class='bx bxs-trash' ></i> Delete</a>
                             </td>
                         </tr>
