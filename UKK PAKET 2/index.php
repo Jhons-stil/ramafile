@@ -1,7 +1,17 @@
 <?php 
+// session start
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: login.php");
+    exit;
+}
+
+
+
+
 // database connections
 $konek = mysqli_connect("localhost", "root", "", "to_do_list");
-
 
 
 // input data to database
@@ -175,9 +185,8 @@ $hasil = mysqli_query($konek, $kueri);
             <nav class="mt-2">
                 <ul class="flex space-x-4">   
                     <li class="block lg:hidden"><a href="javascript:void(0);" id="toggleLink" onclick="toggleInputSection()" class="hover:underline">Add Task</a>
-                    </li>    
-                    <li><a href="#" class="hover:underline">Admin</a></li>    
-                    <li><a href="#" class="hover:underline">Logout</a></li>
+                    </li>      
+                    <li><a href="logout.php" class="hover:underline">Logout</a></li>
                 </ul>
             </nav>
         </div>
