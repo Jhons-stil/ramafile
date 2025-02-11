@@ -9,10 +9,10 @@ if (isset($_COOKIE['phase']) && isset($_COOKIE['key'])) {
     }
 
 
-    $result = mysqli_query($konek, "SELECT id FROM user WHERE id = '$_COOKIE[phase]'");
+    $result = mysqli_query($konek, "SELECT user_id FROM users WHERE user_id = '$_COOKIE[phase]'");
     $row = mysqli_fetch_assoc($result);
 
-    if ($_COOKIE['key'] === hash('sha256', $row['id'])) {
+    if ($_COOKIE['key'] === hash('sha256', $row['user_id'])) {
         $_SESSION['login'] = true;
     }
 }
@@ -29,18 +29,19 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $result = mysqli_query($konek, "SELECT * FROM user WHERE USER = '$username'");
+    $result = mysqli_query($konek, "SELECT * FROM users WHERE username = '$username'");
 
     if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
-        if (password_verify($password, $row['PASSWORD'])) {
+        if (password_verify($password, $row['password'])) {
             // set session
             $_SESSION['login'] = true;
+            $_SESSION['user_id'] = $row['user_id'];
 
             // check remember me
             if (isset($_POST['remember'])) {
-                setcookie('phase', $row['id'], time() + 60);
-                setcookie('key', hash('sha256', $row['username']), time() + 60);
+                setcookie('phase', $row['user_id'], time() + 60);
+                setcookie('key', hash('sha256', $row['user_id']), time() + 60);
             }
 
             header("Location: index.php");

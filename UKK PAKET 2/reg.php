@@ -8,7 +8,7 @@ function register($data) {
     $password = mysqli_real_escape_string($konek, $data['password']);
     $password2 = mysqli_real_escape_string($konek, $data['password2']);
 
-    $result = mysqli_query($konek, "SELECT USER FROM user WHERE USER = '$username'");
+    $result = mysqli_query($konek, "SELECT username FROM users WHERE username = '$username'");
 
     if (mysqli_fetch_assoc($result)) {
         echo "<script>
@@ -26,7 +26,7 @@ function register($data) {
 
     $password = password_hash($password, PASSWORD_DEFAULT);
 
-    mysqli_query($konek, "INSERT INTO user VALUES('', '$username', '$password')");
+    mysqli_query($konek, "INSERT INTO users VALUES('', '$username', '$password')");
 
     return mysqli_affected_rows($konek);
 }

@@ -13,6 +13,9 @@ if (!isset($_SESSION['login'])) {
 // database connections
 $konek = mysqli_connect("localhost", "root", "", "to_do_list");
 
+// get user id
+$user_id = $_SESSION['user_id'];
+
 
 // input data to database
 if (isset($_POST['submit'])) {
@@ -45,7 +48,7 @@ $total_pages = ceil($total_rows / $limit);
 
 
 // show data from database per page
-$kueri = "SELECT * FROM task ORDER BY STATUS ASC, PRIORITY DESC, DUE_DATE ASC LIMIT $limit OFFSET $offset";  
+$kueri = "SELECT * FROM task WHERE USER_ID = '$user_id' ORDER BY STATUS ASC, PRIORITY DESC, DUE_DATE ASC LIMIT $limit OFFSET $offset";  
 $hasil = mysqli_query($konek, $kueri);
 ?>
 
@@ -291,6 +294,9 @@ $hasil = mysqli_query($konek, $kueri);
             </table>
 
             <!-- pagination -->
+
+            <!-- check if there is more than one page -->
+             <?php if ($total_pages > 1) : ?>
              <div class="flex justify-center mt-4">
                 <!-- previous page -->
                 <?php if ($page > 1) :?>
@@ -308,6 +314,7 @@ $hasil = mysqli_query($konek, $kueri);
                 <?php endif ?>
 
              </div>
+             <?php endif; ?>
         </div>
     </div>
 
