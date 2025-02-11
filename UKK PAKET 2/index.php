@@ -1,7 +1,17 @@
 <?php 
+// session start
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: login.php");
+    exit;
+}
+
+
+
+
 // database connections
 $konek = mysqli_connect("localhost", "root", "", "to_do_list");
-
 
 
 // input data to database
@@ -175,9 +185,8 @@ $hasil = mysqli_query($konek, $kueri);
             <nav class="mt-2">
                 <ul class="flex space-x-4">   
                     <li class="block lg:hidden"><a href="javascript:void(0);" id="toggleLink" onclick="toggleInputSection()" class="hover:underline">Add Task</a>
-                    </li>    
-                    <li><a href="#" class="hover:underline">Admin</a></li>    
-                    <li><a href="#" class="hover:underline">Logout</a></li>
+                    </li>      
+                    <li><a href="logout.php" class="hover:underline">Logout</a></li>
                 </ul>
             </nav>
         </div>
@@ -246,9 +255,9 @@ $hasil = mysqli_query($konek, $kueri);
 
                         
                         <tr>
-                            <td class="text-left py-3 px-4"><?= $no++ ?></td>
+                            <td class="text-center py-3 px-4"><?= $no++ ?></td>
                             <td class="text-left py-3 px-4"><?= $data['TASK'] ?></td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4">
                                 <?php if ($data['PRIORITY'] == 1) { ?>
                                     <span class="priority-label inline-block px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full">LOW</span>
                                 <?php } elseif ($data['PRIORITY'] == 2) { ?>
@@ -257,20 +266,23 @@ $hasil = mysqli_query($konek, $kueri);
                                     <span class="priority-label inline-block px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded-full">HIGH</span>
                                 <?php } ?>
                             </td>
-                            <td class="text-left py-3 px-4"><?= $data['DUE_DATE'] ?></td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4"><?= $data['DUE_DATE'] ?></td>
+                            <td class="text-center py-3 px-4">
                                 <?php if ($data['STATUS'] == 1) { ?>
                                     <span class="done-label inline-block px-2 py-1 text-xs font-semibold text-white bg-emerald-500 rounded-md">DONE</span>
                                 <?php } else { ?>
                                     <span class="done-label inline-block px-2 py-1 text-xs font-semibold text-white bg-amber-400 rounded-md">UNDONE</span>
                                 <?php } ?>
                             </td>
-                            <td class="text-left py-3 px-4">
+                            <td class="text-center py-3 px-4">
+                                <?php if ($data['STATUS'] != 1) { ?>
+
+                                    <a href="done.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-green-500 rounded-md"><i class='bx bx-check'></i> Done</a>
                                 
-                                <a href="done.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-green-500 rounded-md"><i class='bx bx-check'></i> Done</a>
+                                    <a href="edit.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-md"><i class='bx bxs-cog'></i> Edit</a>   
                                 
-                                <a href="edit.php?id=<?php echo $data['ID']?>" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-md"><i class='bx bxs-cog'></i> Edit</a>   
-                                
+                                <?php } ?>
+
                                 <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $data['ID']?>)" class="inline-block px-3 py-1 text-xs font-semibold text-white bg-red-700 rounded-md"><i class='bx bxs-trash' ></i> Delete</a>
                             </td>
                         </tr>
